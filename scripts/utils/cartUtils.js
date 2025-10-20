@@ -8,9 +8,3 @@ export function calculateQuantity(cart) {
 
   return cartQuantity;
 }
-
-// function to update the cart items count in checkout page
-export function updateCartQuantity(itemsQuantity) {
-  document.querySelector('.js-checkout-items-quantity')
-    .innerHTML = `${itemsQuantity} items`;
-}

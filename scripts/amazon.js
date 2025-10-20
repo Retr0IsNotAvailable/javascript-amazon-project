@@ -1,9 +1,8 @@
 import { cart } from '../data/cart.js';
-import { products, loadProducts } from '../data/products.js';
-import { formatCurrency } from './utils/money.js';
+import { products, loadProductsFetch } from '../data/products.js';
 import { calculateQuantity } from './utils/cartUtils.js';
 
-loadProducts(renderProductsGrid);
+loadProductsFetch(renderProductsGrid);
 
 function renderProductsGrid() {
   let productsHTML = '';
