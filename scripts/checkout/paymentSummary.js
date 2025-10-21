@@ -1,25 +1,10 @@
 import { cart } from '../../data/cart.js';
-import { getProduct } from '../../data/products.js';
-import { getDeliveryOption } from '../../data/deliveryOptions.js';
-import { formatCurrency } from '../utils/money.js';
+import { formatCurrency, getPrices } from '../utils/money.js';
 import { calculateQuantity } from '../utils/cartUtils.js';
-import { addOrder } from '../../data/orders.js';
+import { addOrder } from '../orders/ordersCart.js';
 
 export function renderPaymentSummary() {
-  let productPriceCents = 0;
-  let shippingPriceCents = 0;
-
-  cart.cartItems.forEach((cartItem) => {
-    const product = getProduct(cartItem.productId);
-    const deliveryOption = getDeliveryOption(cartItem.deliveryOptionId);
-
-    productPriceCents += product.priceCents * cartItem.quantity;
-    shippingPriceCents += deliveryOption.priceCents;
-  });
-
-  const totalBeforeCents = productPriceCents + shippingPriceCents;
-  const taxCents = totalBeforeCents * 0.1;
-  const totalCents = totalBeforeCents + taxCents;
+  const prices = getPrices();
 
   const paymentSummaryHTML = `
     <div class="payment-summary-title">
@@ -29,35 +14,35 @@ export function renderPaymentSummary() {
     <div class="payment-summary-row">
       <div>Items (${calculateQuantity(cart.cartItems)}):</div>
       <div class="payment-summary-money">
-        \$${formatCurrency(productPriceCents)}
+        \$${formatCurrency(prices.productPriceCents)}
       </div>
     </div>
 
     <div class="payment-summary-row">
       <div>Shipping &amp; handling:</div>
       <div class="payment-summary-money">
-        \$${formatCurrency(shippingPriceCents)}
+        \$${formatCurrency(prices.shippingPriceCents)}
       </div>
     </div>
 
     <div class="payment-summary-row subtotal-row">
       <div>Total before tax:</div>
       <div class="payment-summary-money">
-        \$${formatCurrency(totalBeforeCents)}
+        \$${formatCurrency(prices.totalBeforeCents)}
       </div>
     </div>
 
     <div class="payment-summary-row">
       <div>Estimated tax (10%):</div>
       <div class="payment-summary-money">
-        \$${formatCurrency(taxCents)}
+        \$${formatCurrency(prices.taxCents)}
       </div>
     </div>
 
     <div class="payment-summary-row total-row">
       <div>Order total:</div>
       <div class="payment-summary-money">
-        \$${formatCurrency(totalCents)}
+        \$${formatCurrency(prices.totalCents)}
       </div>
     </div>
 

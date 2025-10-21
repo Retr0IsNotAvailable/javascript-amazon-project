@@ -35,7 +35,7 @@ function isWeekend(date) {
   return dayOfWeek === 'Saturday' || dayOfWeek === 'Sunday';
 }
 
-export function calculateDeliveryDate(deliveryOption) {
+export function calculateDeliveryDate(deliveryOption, dateFormat = 'dddd MMMM D') {
   let remainingDays = deliveryOption.deliveryDays;
   let deliveryDate = dayjs();
 
@@ -46,7 +46,7 @@ export function calculateDeliveryDate(deliveryOption) {
       remainingDays--;
     } 
   }
-  const dateString = deliveryDate.format('dddd MMMM D');
+  const dateString = deliveryDate.format(dateFormat);
 
   return dateString;
 }
