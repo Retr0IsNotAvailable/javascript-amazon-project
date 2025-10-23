@@ -70,7 +70,7 @@ export function renderPaymentSummary() {
       addOrder(order);
       
     } catch (error) {
-      console.log('Unexpected error: ' + error);
+      console.error(error);
     }
 
     window.location.href = './orders.html'; 
