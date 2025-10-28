@@ -228,3 +228,8 @@
   margin-top: 11px;
   margin-bottom: 15px;
 }
+
+.no-buying {
+  opacity: 0.6;
+  pointer-events: none;
+}

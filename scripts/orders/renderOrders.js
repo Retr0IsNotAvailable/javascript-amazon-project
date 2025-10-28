@@ -1,18 +1,23 @@
+import { cart } from '../../data/cart.js';
+import { calculateQuantity } from '../utils/cartUtils.js';
 import { getProduct, loadProductsFetch } from '../../data/products.js';
 import { getOrderDate } from './orderDate.js';
 import { formatCurrency } from '../utils/money.js';
 import { orders } from './ordersCart.js';
+import { renderOrdersHeader } from './renderOrdersHeader.js';
 
 await loadProductsFetch();
 
 // generate the orders' HTML
 export function renderOrders() {
+  renderOrdersHeader(cart, calculateQuantity);
+
   let ordersGridHTML = '';
 
   orders.forEach((order) => {
     let orderDetailsHTML = '';
     let orderContainerHTML = '';
-
+    
     order.products.forEach((product) => {
       const { productId } = product;
       const matchingProduct = getProduct(productId);

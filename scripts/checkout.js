@@ -6,8 +6,8 @@ async function loadPage() {
   try {
     await loadProductsFetch();
 
-  } catch(error) {
-    console.log('Error message: ' + error);
+  } catch(err) {
+    console.error(err);
   }
 
   renderOrderSummary();

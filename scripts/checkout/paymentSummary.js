@@ -2,6 +2,7 @@ import { cart } from '../../data/cart.js';
 import { formatCurrency, getPrices } from '../utils/money.js';
 import { calculateQuantity } from '../utils/cartUtils.js';
 import { addOrder } from '../orders/ordersCart.js';
+import { renderOrderSummary } from './orderSummary.js';
 
 export function renderPaymentSummary() {
   const prices = getPrices();
@@ -68,6 +69,10 @@ export function renderPaymentSummary() {
       });
       const order = await response.json();
       addOrder(order);
+      cart.clearCart();
+
+      renderOrderSummary();
+      renderPaymentSummary();
       
     } catch (error) {
       console.error(error);
@@ -75,4 +80,8 @@ export function renderPaymentSummary() {
 
     window.location.href = './orders.html'; 
   });
+  if (cart.cartItems.length === 0) {
+    document.querySelector('.js-place-order')
+      .classList.add('no-buying');
+  }
 }

@@ -23,6 +23,12 @@ class Cart {
   saveToStorage() {
     localStorage.setItem(this.#localStorageKey, JSON.stringify(this.cartItems));
   }
+
+  // clear items from cart and empty the localStorage
+  clearCart() {
+    this.cartItems = [];
+    localStorage.setItem(this.#localStorageKey, JSON.stringify([]));
+  }
   // a method to add to the cart a selected item
   addToCart(productId, quantity = 1) {
     let matchingItem;
