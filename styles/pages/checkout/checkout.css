@@ -233,3 +233,25 @@
   opacity: 0.6;
   pointer-events: none;
 }
+
+.empty-checkout-grid {
+  display: flex;
+  justify-content: space-between;
+}
+
+.empty-cart {
+  display: none;
+}
+
+@media (min-width: 1000px) {
+  .empty-payment-summary {
+    min-width: 350px;
+  }
+}
+
+.view-products {
+  width: 133.5px;
+  height: 37px;
+  margin-top: 10px;
+  font-size: 16px;
+}

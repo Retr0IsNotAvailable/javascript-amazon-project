@@ -5,6 +5,7 @@ import { formatCurrency } from '../utils/money.js';
 import { calculateQuantity } from '../utils/cartUtils.js';
 import { renderPaymentSummary } from './paymentSummary.js';
 import { renderCheckoutHeader } from './checkoutHeader.js';
+import { renderEmptyCheckout } from './renderEmptyCheckout.js';
 
 // a function to re-run the HTML-generative code of orderSummary.js in order to update the web page
 export function renderOrderSummary() {
@@ -13,62 +14,66 @@ export function renderOrderSummary() {
 
   renderCheckoutHeader(cart.cartItems, calculateQuantity);
 
-  cart.cartItems.forEach((cartItem) => {
-    const { productId } = cartItem;
+  if (cart.cartItems.length === 0) {
+    renderEmptyCheckout()
+  } else {
+    cart.cartItems.forEach((cartItem) => {
+      const { productId } = cartItem;
 
-    const matchingProduct = getProduct(productId);
+      const matchingProduct = getProduct(productId);
 
-    const deliveryOptionId = cartItem.deliveryOptionId;
+      const deliveryOptionId = cartItem.deliveryOptionId;
 
-    const deliveryOption = getDeliveryOption(deliveryOptionId);
+      const deliveryOption = getDeliveryOption(deliveryOptionId);
 
-    const dateString = calculateDeliveryDate(deliveryOption);
+      const dateString = calculateDeliveryDate(deliveryOption);
 
-    cartSummaryHTML += `
-    <div class="cart-item-container
-      js-cart-item-container-${matchingProduct.id}">
-      <div class="delivery-date">
-        Delivery date: ${dateString}
-      </div>
-
-      <div class="cart-item-details-grid">
-        <img class="product-image"
-          src="${matchingProduct.image}"/>
-
-        <div class="cart-item-details">
-          <div class="product-name">
-            ${matchingProduct.name}
-          </div>
-          <div class="product-price">
-            ${matchingProduct.getPrice()}
-          </div>
-          <div class="product-quantity">
-            <span>
-            Quantity: <span class="quantity-label">${cartItem.quantity}</span>
-            </span>
-            <span class="update-quantity-link link-primary js-update-link"
-            data-product-id="${matchingProduct.id}">
-              Update
-            </span>
-            <input type="text" class="quantity-input js-quantity-input-${matchingProduct.id}"/>
-            <span class="save-quantity-link link-primary js-save-link"
-            data-product-id="${matchingProduct.id}">Save</span>
-            <span class="delete-quantity-link link-primary js-delete-link"
-            data-product-id="${matchingProduct.id}">Delete
-            </span>
-          </div>
+      cartSummaryHTML += `
+      <div class="cart-item-container
+        js-cart-item-container-${matchingProduct.id}">
+        <div class="delivery-date">
+          Delivery date: ${dateString}
         </div>
 
-        <div class="delivery-options">
-          <div class="delivery-options-title">
-            Choose a delivery option:
+        <div class="cart-item-details-grid">
+          <img class="product-image"
+            src="${matchingProduct.image}"/>
+
+          <div class="cart-item-details">
+            <div class="product-name">
+              ${matchingProduct.name}
+            </div>
+            <div class="product-price">
+              ${matchingProduct.getPrice()}
+            </div>
+            <div class="product-quantity">
+              <span>
+              Quantity: <span class="quantity-label">${cartItem.quantity}</span>
+              </span>
+              <span class="update-quantity-link link-primary js-update-link"
+              data-product-id="${matchingProduct.id}">
+                Update
+              </span>
+              <input type="text" class="quantity-input js-quantity-input-${matchingProduct.id}"/>
+              <span class="save-quantity-link link-primary js-save-link"
+              data-product-id="${matchingProduct.id}">Save</span>
+              <span class="delete-quantity-link link-primary js-delete-link"
+              data-product-id="${matchingProduct.id}">Delete
+              </span>
+            </div>
           </div>
-          ${deliveryOptionsHTML(cartItem, matchingProduct)}
+
+          <div class="delivery-options">
+            <div class="delivery-options-title">
+              Choose a delivery option:
+            </div>
+            ${deliveryOptionsHTML(cartItem, matchingProduct)}
+          </div>
         </div>
       </div>
-    </div>
-  `;
-  });
+    `;
+    });
+  }
 
   // funtion to generate the HTML for the available delivery option
   function deliveryOptionsHTML(cartItem, matchingProduct) {
