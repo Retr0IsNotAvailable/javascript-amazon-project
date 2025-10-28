@@ -54,7 +54,8 @@ export function renderOrderSummary() {
               data-product-id="${matchingProduct.id}">
                 Update
               </span>
-              <input type="text" class="quantity-input js-quantity-input-${matchingProduct.id}"/>
+              <input type="number" min="0" max="1000" class="quantity-input
+                js-quantity-input-${matchingProduct.id}"/>
               <span class="save-quantity-link link-primary js-save-link"
               data-product-id="${matchingProduct.id}">Save</span>
               <span class="delete-quantity-link link-primary js-delete-link"
@@ -140,8 +141,12 @@ export function renderOrderSummary() {
         const containerInput = document.querySelector(`.js-quantity-input-${productId}`);
         const inputValue = parseInt(containerInput.value);
 
-        // update the cart itself
-        cart.updateQuantity(productId, inputValue);
+        if (!inputValue) {
+          alert('Not a valid quantity');
+        } else if (inputValue > 0 && inputValue < 99) {
+          // update the cart itself
+          cart.updateQuantity(productId, inputValue);
+        }
         
         containerInput.value = '';
         container.classList.remove('is-editing-quantity');

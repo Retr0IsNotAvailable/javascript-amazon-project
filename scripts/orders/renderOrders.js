@@ -38,7 +38,8 @@ export function renderOrders() {
             <div class="product-quantity">
               Quantity: ${product.quantity}
             </div>
-            <button class="buy-again-button button-primary">
+            <button class="buy-again-button button-primary
+            js-buy-again-button" data-product-id="${matchingProduct.id}">
               <img class="buy-again-icon" src="images/icons/buy-again.png">
               <span class="buy-again-message">Buy it again</span>
             </button>
@@ -84,4 +85,23 @@ export function renderOrders() {
   
   document.querySelector('.js-orders-grid')
     .innerHTML += ordersGridHTML;
+  
+  document.querySelectorAll('.js-buy-again-button').forEach((button) => {
+    let timeoutId;
+    button.addEventListener('click', () => {
+      const { productId } = button.dataset;
+      cart.addToCart(productId);
+
+      button.innerHTML = '&#10003; Added';
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        button.innerHTML = `
+          <img class="buy-again-icon" src="images/icons/buy-again.png">
+          <span class="buy-again-message">Buy it again</span>
+        `
+      }, 2000);
+
+      renderOrdersHeader(cart, calculateQuantity);
+    });
+  });
 }
