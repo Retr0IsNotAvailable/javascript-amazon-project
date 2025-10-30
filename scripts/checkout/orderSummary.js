@@ -55,7 +55,7 @@ export function renderOrderSummary() {
                 Update
               </span>
               <input type="number" min="0" max="1000" class="quantity-input
-                js-quantity-input-${matchingProduct.id}"/>
+                js-quantity-input" data-product-id="${matchingProduct.id}"/>
               <span class="save-quantity-link link-primary js-save-link"
               data-product-id="${matchingProduct.id}">Save</span>
               <span class="delete-quantity-link link-primary js-delete-link"
@@ -115,6 +115,50 @@ export function renderOrderSummary() {
     return html;
   }
 
+  // delete a product in the cart
+  function deleteProduct(link, cart) {
+    const { productId } = link.dataset;    // get the productId of the parent element of the link through dataset
+    cart.removeFromCart(productId);
+
+    renderOrderSummary();
+    renderPaymentSummary();
+  }
+
+  // finds the selected quantity input
+  function findContainerInput(productId) {
+    let containerInput;
+    document.querySelectorAll('.js-quantity-input')
+      .forEach((input) => {
+        if (productId === input.dataset.productId) containerInput = input;
+      });
+    return containerInput;
+  }
+
+  // save changes of products
+  function saveChanges(link, cart) {
+    const { productId } = link.dataset;   // get the productId of the parent element
+    // get the item-container of the product's unique class w/ the DOM
+    const container = document.querySelector(`.js-cart-item-container-${productId}`);
+    // get the item-container input element
+    const containerInput = findContainerInput(productId);
+    const inputValue = parseInt(containerInput.value);
+
+    if (inputValue < 0 || inputValue > 99) {
+      alert('Not a valid quantity');
+    } else if (inputValue === 0) {
+      deleteProduct(link, cart);
+    } else if (inputValue > 0 && inputValue <= 99) {
+      // update the cart itself
+      cart.updateQuantity(productId, inputValue);
+    }
+    
+    containerInput.value = '';
+    container.classList.remove('is-editing-quantity');
+
+    renderOrderSummary();
+    renderPaymentSummary();
+  }
+
   document.querySelector('.js-order-summary')
     .innerHTML = cartSummaryHTML;
 
@@ -127,6 +171,9 @@ export function renderOrderSummary() {
         // get the item-container of the product's unique class w/ the DOM
         const container = document.querySelector(`.js-cart-item-container-${productId}`);
         container.classList.add('is-editing-quantity');
+
+        // auto focus on the targeted quantity input
+        findContainerInput(productId).focus();
       });
     });
 
@@ -134,25 +181,15 @@ export function renderOrderSummary() {
   document.querySelectorAll('.js-save-link')
     .forEach((link) => {    // loop through all save links when clicked
       link.addEventListener('click', () => {
-        const { productId } = link.dataset;   // get the productId of the parent element
-        // get the item-container of the product's unique class w/ the DOM
-        const container = document.querySelector(`.js-cart-item-container-${productId}`);
-        // get the item-container input element
-        const containerInput = document.querySelector(`.js-quantity-input-${productId}`);
-        const inputValue = parseInt(containerInput.value);
-
-        if (!inputValue) {
-          alert('Not a valid quantity');
-        } else if (inputValue > 0 && inputValue < 99) {
-          // update the cart itself
-          cart.updateQuantity(productId, inputValue);
-        }
-        
-        containerInput.value = '';
-        container.classList.remove('is-editing-quantity');
-
-        renderOrderSummary();
-        renderPaymentSummary();
+        saveChanges(link, cart);
+      });
+    });
+  
+  // select all quantity input links
+  document.querySelectorAll('.js-quantity-input')
+    .forEach((link) => {
+      link.addEventListener('keydown', (e) => {   // listen for keystrokes
+        if (e.key === 'Enter') saveChanges(link, cart);
       });
     });
 
@@ -160,11 +197,7 @@ export function renderOrderSummary() {
   document.querySelectorAll('.js-delete-link')
     .forEach((link) => {  // loop through each one of them to see which one is clicked
       link.addEventListener('click', () => {
-        const { productId } = link.dataset;    // get the productId of the parent element of the link through dataset
-        cart.removeFromCart(productId);
-
-        renderOrderSummary();
-        renderPaymentSummary();
+        deleteProduct(link, cart);
       });
     });
 

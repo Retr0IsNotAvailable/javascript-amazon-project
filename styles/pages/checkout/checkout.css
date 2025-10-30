@@ -247,7 +247,8 @@
 
 @media (min-width: 1000px) {
   .empty-payment-summary {
-    min-width: 350px;
+    min-width: 312px;
+    min-height: 282px;
   }
 }
 
