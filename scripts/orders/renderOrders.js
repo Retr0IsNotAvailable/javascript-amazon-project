@@ -33,7 +33,7 @@ export function renderOrders() {
               ${matchingProduct.name}
             </div>
             <div class="product-delivery-date">
-              Arriving on: ${product.estimatedDeliveryTime}
+              Arriving on: ${getOrderDate(product.estimatedDeliveryTime)}
             </div>
             <div class="product-quantity">
               Quantity: ${product.quantity}
@@ -46,7 +46,7 @@ export function renderOrders() {
           </div>
 
           <div class="product-actions">
-            <a href="tracking.html">
+            <a href="./tracking.html?productId=${productId}&orderId=${order.id}">
               <button class="track-package-button button-secondary">
                 Track package
               </button>

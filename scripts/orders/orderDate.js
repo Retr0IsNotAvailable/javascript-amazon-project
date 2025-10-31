@@ -1,6 +1,11 @@
-export function getOrderDate(dateString) {
+export function getOrderDate(dateString, isOrderPage = true){
   const date = new Date(dateString);
-  const options = { month: 'long', day: 'numeric' };
+  let options;
+  if (isOrderPage) {
+    options = { month: 'long', day: 'numeric' };
+  } else {
+    options = {weekday: 'long', month: 'long', day: 'numeric'}
+  }
 
   return date.toLocaleDateString('en-US', options);
 }
