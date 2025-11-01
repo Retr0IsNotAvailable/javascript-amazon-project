@@ -4,8 +4,9 @@
  */
 import { loadProductsFetch, getProduct } from '../../data/products.js';
 import { getOrderProduct } from './getOrderProduct.js';
-import { getOrderDate } from '../orders/orderDate.js';
 import { getDeliveryProgress } from './trackDeliveryProgress.js';
+import { getProgressStatus } from './getProgressStatus.js';
+import { getOrderDate } from '../orders/orderDate.js';
 
 await loadProductsFetch();
 
@@ -45,25 +46,31 @@ export function renderTrackingSummary() {
     <img class="product-image" src="${matchingCartProduct.image}">
 
     <div class="progress-labels-container">
-      <div class="progress-label">
+      <div class="progress-label js-preparing">
         Preparing
       </div>
-      <div class="progress-label current-status">
+      <div class="progress-label current-status js-shipped">
         Shipped
       </div>
-      <div class="progress-label">
+      <div class="progress-label js-delivered">
         Delivered
       </div>
     </div>
 
     <div class="progress-bar-container">
-      <div class="progress-bar"></div>
+      <div class="progress-bar js-progress-bar"></div>
     </div>
   `
 
   document.querySelector('.js-order-tracking')
     .innerHTML = orderTrackingHTML;
   
-  document.querySelector('.progress-bar')
-    .setAttribute('style', `width: ${progressPercent}%`);
+  getProgressStatus(progressPercent);
+  
+  // setTimeout is necessary, otherwise js will change the width value before
+  // the HTML is rendered on the page, somehow.
+  setTimeout(() => {
+    document.querySelector('.js-progress-bar')
+      .style.width = `${progressPercent}%`;
+  }, 1);
 }
