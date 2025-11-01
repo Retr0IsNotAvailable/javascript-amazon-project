@@ -17,7 +17,6 @@ export function renderOrders() {
   orders.forEach((order) => {
     let orderDetailsHTML = '';
     let orderContainerHTML = '';
-    
     order.products.forEach((product) => {
       const { productId } = product;
       const matchingProduct = getProduct(productId);

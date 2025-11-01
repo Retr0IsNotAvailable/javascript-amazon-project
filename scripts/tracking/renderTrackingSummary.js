@@ -72,5 +72,5 @@ export function renderTrackingSummary() {
   setTimeout(() => {
     document.querySelector('.js-progress-bar')
       .style.width = `${progressPercent}%`;
-  }, 1);
+  }, 100);
 }
